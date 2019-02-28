@@ -1,34 +1,58 @@
-//////////////////////////////////////////////// /* Imports */ //////////////////////////////////////////////////////////
-var express = require('express'); // Express Server
-var bodyParser = require('body-parser'); // Post Body Request
-var exphbs = require('express-handlebars'); // Templating Engine
-// let logger = require("morgan"); // Logger
-var db = require("./models"); // Require all models
-// let cheerio = require('cheerio'; // Web Scrapper
-// let mongoose = require('mongoose'; // MongoDB ORM
-// let db from "./models"; // Require all models
+'use strict';
 
-/////////////////////////////////////////////// /* Set Up Variables*/ //////////////////////////////////////////////////////////
 
-var PORT = process.env.PORT || 8080; // Set Default Port for Express and Heroku
-var app = express(); // Initialize Express
+// dependencies
+// =============================================================
+const express = require('express'),
+      exphbs = require('express-handlebars'),
+      bodyParser = require('body-parser'),
+      logger = require('morgan'),
+      mongoose = require('mongoose'),
+      methodOverride = require('method-override');
 
-/////////////////////////////////////////////// /* Configure middleware */ //////////////////////////////////////////////////////////
+// set up express app
+// =============================================================
+const PORT = process.env.PORT || 8000;
+let app = express();
 
-// app.use(logger("dev")); // Use morgan logger for logging requests
-app.use(bodyParser.urlencoded({ extended: false })); // Use body-parser for handling form submissions
-app.use(bodyParser.json());
-app.use(express.static("public")); // Serve static content for the app from the "public" directory in the application directory.
+app
+    .use(bodyParser.json())
+    .use(bodyParser.urlencoded({ extended:true }))
+    .use(bodyParser.text())
+    .use(bodyParser.json({ type: 'application/vnd.api+json' }))
+    .use(methodOverride('_method'))
+    .use(logger('dev'))
+    .use(express.static(__dirname + '/public'))
+    .engine('handlebars', exphbs({ defaultLayout: 'main' }))
+    .set('view engine', 'handlebars')
+    .use(require('./controllers'));
 
-// Set Handlebars as the default templating engine.
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
+// configure mongoose and start the server
+// =============================================================
+// set mongoose to leverage promises
+mongoose.Promise = Promise;
 
-/////////////////////////////////////////////// /* Configure Routes */ //////////////////////////////////////////////////////////
-require("./controllers/webScrapperController.js")(app);
+const dbURI = process.env.MONGODB_URI || "mongodb://localhost:27017/newsArticles";
 
-/////////////////////////////////////////////// /* Execution */ //////////////////////////////////////////////////////////
+// Database configuration with mongoose
+mongoose.set('useCreateIndex', true)
+mongoose.connect(dbURI, { useNewUrlParser: true });
 
-app.listen(PORT, () => {
-    console.log(`App listening on PORT ${PORT}`);
+const db = mongoose.connection;
+
+// Show any mongoose errors
+db.on("error", function(error) {
+    console.log("Mongoose Error: ", error);
 });
+
+// Once logged in to the db through mongoose, log a success message
+db.once("open", function() {
+    console.log("Mongoose connection successful.");
+    // start the server, listen on port 3000
+    app.listen(PORT, function() {
+        console.log("App running on port " + PORT);
+    });
+});
+
+module.exports = app;
+    

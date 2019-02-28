@@ -18,13 +18,15 @@
   },
   "homepage": "https://github.com/b230ft/All-the-news-thats-fit-to-scrape#readme",
   "dependencies": {
-    "axios": "0.17.1",
-    "body-parser": "1.18.2",
+    "body-parser": "1.18.3",
     "cheerio": "1.0.0-rc.2",
-    "express": "4.16.2",
+    "express": "4.16.3",
     "express-handlebars": "3.0.0",
-    "mongoose": "4.13.9",
-    "request": "2.83.0"
+    "method-override": "3.0.0",
+    "mongoose": "5.2.16",
+    "mongoose-unique-validator": "2.0.2",
+    "morgan": "1.9.1",
+    "request": "2.88.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
