@@ -1,7 +1,7 @@
 //////////////////////////////////////////////// /* Imports */ //////////////////////////////////////////////////////////
-let express = require('express'); // Express Server
-let bodyParser = require('body-parser'); // Post Body Request
-let exphbs = require('express-handlebars'); // Templating Engine
+var express = require('express'); // Express Server
+var bodyParser = require('body-parser'); // Post Body Request
+var exphbs = require('express-handlebars'); // Templating Engine
 // let logger = require("morgan"); // Logger
 var db = require("./models"); // Require all models
 // let cheerio = require('cheerio'; // Web Scrapper
@@ -10,8 +10,8 @@ var db = require("./models"); // Require all models
 
 /////////////////////////////////////////////// /* Set Up Variables*/ //////////////////////////////////////////////////////////
 
-let PORT = process.env.PORT || 8080; // Set Default Port for Express and Heroku
-let app = express(); // Initialize Express
+var PORT = process.env.PORT || 8080; // Set Default Port for Express and Heroku
+var app = express(); // Initialize Express
 
 /////////////////////////////////////////////// /* Configure middleware */ //////////////////////////////////////////////////////////
 
@@ -29,6 +29,6 @@ require("./controllers/webScrapperController.js")(app);
 
 /////////////////////////////////////////////// /* Execution */ //////////////////////////////////////////////////////////
 
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
     console.log(`App listening on PORT ${PORT}`);
-})
+});
